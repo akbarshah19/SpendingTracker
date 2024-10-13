@@ -8,16 +8,27 @@
 import SwiftUI
 
 struct MainView: View {
+    
+    @State private var showAddCard = false
+    
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
-                    Card()
+                TabView {
+                    ForEach(0..<5) { i in
+                        Card()
+                            .padding(.bottom, 50)
+                    }
                 }
-                .padding()
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .frame(height: 300)
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
             }
             .navigationTitle("Credit cards")
             .toolbar(content: Toolbar)
+            .fullScreenCover(isPresented: $showAddCard) {
+                AddCardView()
+            }
         }
     }
     
@@ -36,6 +47,7 @@ struct MainView: View {
                 Spacer()
                 Text("Balance: $10.00")
             }
+            .padding(.bottom)
             
             Text("1234 1234 1234 1234")
             
@@ -47,13 +59,14 @@ struct MainView: View {
             LinearGradient(colors: [.blue.opacity(0.6), .blue], startPoint: .top, endPoint: .bottom)
         }
         .clipShape(.rect(cornerRadius: 8))
+        .padding()
     }
     
     @ToolbarContentBuilder
     private func Toolbar() -> some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                
+                showAddCard.toggle()
             } label: {
                 Image(systemName: "plus")
             }
